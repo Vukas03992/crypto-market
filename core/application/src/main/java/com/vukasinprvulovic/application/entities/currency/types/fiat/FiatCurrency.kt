@@ -1,11 +1,14 @@
 @file:Suppress("PackageDirectoryMismatch")
 package com.vukasinprvulovic.application.entities.currency
 
+import com.vukasinprvulovic.application.entities.currency.types.fiat.properties.FiatProperties
+import com.vukasinprvulovic.application.entities.ticker.HasTicker
+
 sealed class BaseFiatCurrency<out FiatSpecificProperties: BaseFiatCurrency.Properties>(
     override val properties: FiatSpecificProperties
-): Currency<FiatSpecificProperties>(), Currency.Properties by properties {
+): Currency<FiatSpecificProperties>() {
 
-    open class Properties(override val name: String, override val symbol: String, override val isoCode: String) : Currency.Properties
+    interface Properties : Currency.Properties, HasTicker
 
-    data class FiatCurrency(override val properties: Properties): BaseFiatCurrency<Properties>(properties)
+    data class FiatCurrency(override val properties: FiatProperties): BaseFiatCurrency<FiatProperties>(properties), Properties by properties
 }
