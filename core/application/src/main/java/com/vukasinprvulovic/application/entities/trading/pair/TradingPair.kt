@@ -1,13 +1,19 @@
 package com.vukasinprvulovic.application.entities.trading.pair
 
 import com.vukasinprvulovic.application.entities.currency.Currency
+import com.vukasinprvulovic.application.entities.ticker.Ticker
+import com.vukasinprvulovic.application.entities.ticker.strategy.HasTickerProducer
 import com.vukasinprvulovic.application.entities.trading.data.Trading
+import com.vukasinprvulovic.application.entities.trading.pair.ticker.TradingPairTickerProducingStrategy
 
 data class TradingPair<out BaseCurrency: Currency<*>, out QuoteCurrency: Currency<*>>(
     val baseCurrency: BaseCurrency,
     val quoteCurrency: QuoteCurrency,
     val tradingData: Trading.Data
-)
+): HasTickerProducer {
+    override val ticker: Ticker
+        get() = ticker(TradingPairTickerProducingStrategy())
+}
 
 data class TradingPairs(
     private val tradingPairs: List<TradingPair<*, *>>

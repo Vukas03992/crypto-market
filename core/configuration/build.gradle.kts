@@ -33,6 +33,7 @@ android {
 
 dependencies {
 
+    implementation(libs.guava)
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
 

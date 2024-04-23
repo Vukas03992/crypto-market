@@ -23,5 +23,6 @@ rootProject.name = "CryptoMarket"
 include(":app")
 include(":core:application")
 include(":core:utils")
-include(":data:network")
+include(":data:remote:network")
 include(":core:configuration")
+include(":data:remote")

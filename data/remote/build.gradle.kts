@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vukasinprvulovic.network"
+    namespace = "com.vukasinprvulovic.remote"
     compileSdk = 34
 
     defaultConfig {
@@ -31,12 +31,8 @@ android {
     }
 }
 
-kapt {
-    correctErrorTypes = true
-}
-
 dependencies {
-    implementation(project(":core:utils"))
+    implementation(project(":data:remote:network"))
     implementation(project(":core:application"))
     implementation(project(":core:configuration"))
 
@@ -46,15 +42,5 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-
-    implementation(libs.ktor.client)
-    implementation(libs.ktor.content.negotiation)
-    implementation(libs.ktor.json.serialization)
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.ktor.logging)
-
     testImplementation(libs.junit)
-    testImplementation(libs.ktor.client.test)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.kotest.assertion)
 }
