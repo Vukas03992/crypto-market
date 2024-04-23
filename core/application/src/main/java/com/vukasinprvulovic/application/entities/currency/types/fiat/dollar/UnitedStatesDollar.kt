@@ -11,4 +11,5 @@ data object UnitedStatesDollarProperties: BaseFiatCurrency.Properties {
     override val symbol: String = "$"
     override val isoCode: String = "USD"
     override val ticker: Ticker = Ticker(isoCode)
+    override val identifier: String = isoCode
 }
