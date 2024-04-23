@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kapt)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.vukasinprvulovic.utils"
+    namespace = "com.vukasinprvulovic.configuration"
     compileSdk = 34
 
     defaultConfig {
@@ -30,7 +32,9 @@ android {
 }
 
 dependencies {
-    api(libs.hilt)
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

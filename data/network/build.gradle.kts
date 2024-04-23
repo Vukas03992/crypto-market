@@ -1,10 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kapt)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.vukasinprvulovic.utils"
+    namespace = "com.vukasinprvulovic.network"
     compileSdk = 34
 
     defaultConfig {
@@ -29,13 +31,30 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
-    api(libs.hilt)
+    implementation(project(":core:utils"))
+    implementation(project(":core:application"))
+    implementation(project(":core:configuration"))
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    implementation(libs.ktor.client)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.json.serialization)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.ktor.logging)
+
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.ktor.client.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotest.assertion)
 }
