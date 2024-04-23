@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CryptoMarket"
 include(":app")
- 
+include(":core:application")
