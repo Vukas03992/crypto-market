@@ -32,6 +32,7 @@ android {
 
 dependencies {
     api(project(":core:utils"))
+    implementation(project(":core:configuration"))
 
     implementation(libs.kotlinx.serialization)
 

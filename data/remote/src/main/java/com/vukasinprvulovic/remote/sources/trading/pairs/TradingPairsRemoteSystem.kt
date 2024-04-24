@@ -8,7 +8,7 @@ import com.vukasinprvulovic.application.entities.trading.data.price.bid.BID
 import com.vukasinprvulovic.application.entities.trading.data.units.DailyVolume
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPair
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
-import com.vukasinprvulovic.configuration.di.annotations.ApplicationDispatcher
+import com.vukasinprvulovic.configuration.di.annotations.ApplicationCoroutineDispatcher
 import com.vukasinprvulovic.network.api.tickers.TickersAPI
 import com.vukasinprvulovic.remote.sources.trading.pairs.ticker.TickersAPITickerProducingStrategy
 import com.vukasinprvulovic.utils.kotlin.results.foldResultsSuspend
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TradingPairsRemoteSystem @Inject constructor(
-    @ApplicationDispatcher private val dispatcher: CoroutineDispatcher,
+    @ApplicationCoroutineDispatcher private val dispatcher: CoroutineDispatcher,
     private val tickersAPI: TickersAPI
 ): TradingPairsRemoteSource {
 

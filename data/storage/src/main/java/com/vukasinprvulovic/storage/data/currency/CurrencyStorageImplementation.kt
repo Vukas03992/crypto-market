@@ -5,7 +5,7 @@ package com.vukasinprvulovic.storage.data.currency
 import com.vukasinprvulovic.application.data.sources.storage.currency.CurrencyStorage
 import com.vukasinprvulovic.application.data.sources.storage.currency.filters.CurrencyStorageFilter
 import com.vukasinprvulovic.application.entities.currency.Currency
-import com.vukasinprvulovic.configuration.di.annotations.ApplicationDispatcher
+import com.vukasinprvulovic.configuration.di.annotations.ApplicationCoroutineDispatcher
 import com.vukasinprvulovic.storage.data.currency.types.CurrencyStorageFilterApplier
 import com.vukasinprvulovic.utils.kotlin.results.foldResultsSuspend
 import kotlinx.coroutines.CoroutineDispatcher
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CurrencyStorageImplementation @Inject constructor(
-    @ApplicationDispatcher private val dispatcher: CoroutineDispatcher,
+    @ApplicationCoroutineDispatcher private val dispatcher: CoroutineDispatcher,
     private val currencyStorageFilterAppliers: Set<CurrencyStorageFilterApplier<*>>
 ): CurrencyStorage {
     override suspend fun <RetrievedCurrency : Currency<*>> retrieveCurrencies(filter: CurrencyStorageFilter<RetrievedCurrency>): Result<List<RetrievedCurrency>> = withContext(dispatcher) {
