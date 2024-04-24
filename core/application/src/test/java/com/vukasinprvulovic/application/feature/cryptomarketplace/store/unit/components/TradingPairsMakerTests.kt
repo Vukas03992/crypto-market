@@ -8,7 +8,7 @@ import com.vukasinprvulovic.application.entities.currency.types.crypto.propertie
 import com.vukasinprvulovic.application.entities.ticker.Ticker
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPair
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
-import com.vukasinprvulovic.application.features.cryptomarketplace.result.getDataOfInstance
+import com.vukasinprvulovic.application.features.cryptomarketplace.result.requireDataOfInstance
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreAction
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
@@ -51,7 +51,7 @@ class TradingPairsMakerTests {
         flow {
             tradingPairsMaker.handle(context, this)
         }.collect {}
-        val internalActionResults = context.currentCryptoMarketplaceResults.data().getDataOfInstance<TradingPairsAreMade>()
+        val internalActionResults = context.currentCryptoMarketplaceResults.data().requireDataOfInstance<TradingPairsAreMade>()
         internalActionResults.tradingPairs.size shouldBe 1
         val tradingPair = internalActionResults.tradingPairs.first().shouldBeInstanceOf<TradingPair<CryptoCurrency, UnitedStatesDollar>>()
         tradingPair.baseCurrency.identifier shouldBe "BTC"

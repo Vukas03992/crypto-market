@@ -1,9 +1,12 @@
 package com.vukasinprvulovic.application.features.cryptomarketplace.store.di
 
+import com.vukasinprvulovic.application.features.cryptomarketplace.searching.strategy.CryptoMarketplaceSearchingStrategy
+import com.vukasinprvulovic.application.features.cryptomarketplace.searching.strategy.DefaultCryptoMarketplaceSearchingStrategy
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandler
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.StartActionHandler
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.FilterTradingPairsBasedOnSearchingToken
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
 import dagger.Binds
@@ -29,5 +32,12 @@ internal abstract class CryptoMarketplaceStoreModule {
     abstract fun provideGetTradingPairsDataActionHandler(getTradingPairsData: GetTradingPairsData): CryptoMarketplaceStoreActionHandler
 
     @Binds
+    @IntoSet
+    abstract fun provideFilterTradingPairsBySearchTokenActionHandler(filterTradingPairsBasedOnSearchingToken: FilterTradingPairsBasedOnSearchingToken): CryptoMarketplaceStoreActionHandler
+
+    @Binds
     abstract fun bindCryptoMarketplaceStore(internalCryptoMarketplaceStore: InternalCryptoMarketplaceStore): CryptoMarketplaceStore
+
+    @Binds
+    abstract fun bindCryptoMarketplaceSearchingStrategy(defaultCryptoMarketplaceSearchingStrategy: DefaultCryptoMarketplaceSearchingStrategy): CryptoMarketplaceSearchingStrategy
 }

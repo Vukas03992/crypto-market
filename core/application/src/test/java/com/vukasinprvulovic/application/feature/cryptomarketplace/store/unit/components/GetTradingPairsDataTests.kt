@@ -7,7 +7,7 @@ import com.vukasinprvulovic.application.entities.trading.data.price.bid.BID
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPair
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
-import com.vukasinprvulovic.application.features.cryptomarketplace.result.getDataOfInstance
+import com.vukasinprvulovic.application.features.cryptomarketplace.result.requireDataOfInstance
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreAction
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
@@ -40,7 +40,7 @@ class GetTradingPairsDataTests {
         }.collect {
             results = it
         }
-        val pairs = results.shouldNotBeNull().data().getDataOfInstance<TradingPairs>()
+        val pairs = results.shouldNotBeNull().data().requireDataOfInstance<TradingPairs>()
         pairs.shouldNotBeEmpty().first().shouldBeInstanceOf<TradingPair<UnitedStatesDollar, UnitedStatesDollar>>().tradingData shouldBe tradingData
     }
 }

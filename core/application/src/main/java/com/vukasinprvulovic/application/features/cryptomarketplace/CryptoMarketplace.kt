@@ -8,9 +8,14 @@ import com.vukasinprvulovic.application.features.cryptomarketplace.result.Crypto
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResultEmitting
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResultSubscriber
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
+import com.vukasinprvulovic.application.features.cryptomarketplace.searching.CryptoMarketplaceSearching
+import com.vukasinprvulovic.application.features.cryptomarketplace.searching.CryptoMarketplaceSearchingMachine
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.SearchingToken
 import com.vukasinprvulovic.configuration.di.annotations.ApplicationCoroutineScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,14 +24,17 @@ class CryptoMarketplace @Inject constructor(
     private val cryptoMarketplaceLifecycle: CryptoMarketplaceLifecycleManager,
     private val cryptoMarketplaceEmitting: CryptoMarketplaceResultEmitting,
     private val cryptoMarketplaceStore: CryptoMarketplaceStore,
-    private val cryptoMarketplaceRefresher: CryptoMarketplaceRefresher
+    private val cryptoMarketplaceRefresher: CryptoMarketplaceRefresher,
+    private val cryptoMarketplaceSearchingMachine: CryptoMarketplaceSearchingMachine
 ) : CryptoMarketplaceLifecycle by cryptoMarketplaceLifecycle,
     CryptoMarketplaceEmitter by cryptoMarketplaceEmitting,
-    CryptoMarketplaceRefreshing by cryptoMarketplaceRefresher {
+    CryptoMarketplaceRefreshing by cryptoMarketplaceRefresher,
+    CryptoMarketplaceSearching by cryptoMarketplaceSearchingMachine {
 
     init {
         applicationCoroutineScope.launch {
             setUpCryptoMarketplaceRefresher()
+            setUpCryptoMarketplaceSearchingMachine()
             cryptoMarketplaceLifecycle.initialize()
             cryptoMarketplaceLifecycle.start()
         }
@@ -34,7 +42,10 @@ class CryptoMarketplace @Inject constructor(
 
     private fun setUpCryptoMarketplaceRefresher() {
         cryptoMarketplaceRefresher.action = {
-            cryptoMarketplaceStore.visitStore(CryptoMarketplaceResults()).collect {
+            val initialResults = CryptoMarketplaceResults(
+                cryptoMarketplaceSearchingMachine.currentSearchToken()?.let { setOf(SearchingToken(it)) } ?: emptySet()
+            )
+            cryptoMarketplaceStore.visitStore(initialResults).collect {
                 cryptoMarketplaceEmitting.resultsFlow.value = it
             }
         }
@@ -45,5 +56,11 @@ class CryptoMarketplace @Inject constructor(
                 it is CryptoMarketplaceLifecycle.State.STOPPED -> cryptoMarketplaceRefresher.shutDown()
             }
         }
+    }
+
+    private fun setUpCryptoMarketplaceSearchingMachine() {
+        cryptoMarketplaceSearchingMachine.searchTokenStream.onEach {
+            cryptoMarketplaceRefresher.forceRefresh()
+        }.launchIn(applicationCoroutineScope)
     }
 }

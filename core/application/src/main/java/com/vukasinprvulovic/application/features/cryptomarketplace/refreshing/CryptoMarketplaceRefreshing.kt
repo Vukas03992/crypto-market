@@ -36,14 +36,7 @@ class CryptoMarketplaceRefresher @Inject constructor(
     fun start() {
         refreshingCoroutineScope.launch {
             refreshingJobMutex.withLock {
-                currentRefreshingJob?.cancel()
-                currentRefreshingJob = refreshingCoroutineScope.launch {
-                    while(true) {
-                        ensureActive()
-                        action()
-                        delay(configuration.interval)
-                    }
-                }
+                startRefreshing()
             }
         }
     }
@@ -51,14 +44,38 @@ class CryptoMarketplaceRefresher @Inject constructor(
     fun stop() {
         refreshingCoroutineScope.launch {
             refreshingJobMutex.withLock {
-                currentRefreshingJob?.cancel()
-                currentRefreshingJob = null
+                stopRefreshing()
             }
         }
     }
 
     fun shutDown() {
         refreshingCoroutineScope.cancel()
+        currentRefreshingJob = null
+    }
+
+    fun forceRefresh() {
+        refreshingCoroutineScope.launch {
+            refreshingJobMutex.withLock {
+                stopRefreshing()
+                startRefreshing()
+            }
+        }
+    }
+
+    private suspend fun startRefreshing() {
+        currentRefreshingJob?.cancel()
+        currentRefreshingJob = refreshingCoroutineScope.launch {
+            while(true) {
+                ensureActive()
+                action()
+                delay(configuration.interval)
+            }
+        }
+    }
+
+    private fun stopRefreshing() {
+        currentRefreshingJob?.cancel()
         currentRefreshingJob = null
     }
 
