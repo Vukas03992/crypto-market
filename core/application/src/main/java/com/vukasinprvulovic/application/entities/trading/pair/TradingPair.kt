@@ -5,6 +5,7 @@ import com.vukasinprvulovic.application.entities.ticker.Ticker
 import com.vukasinprvulovic.application.entities.ticker.strategy.HasTickerProducer
 import com.vukasinprvulovic.application.entities.trading.data.Trading
 import com.vukasinprvulovic.application.entities.trading.pair.ticker.TradingPairTickerProducingStrategy
+import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
 
 data class TradingPair<out BaseCurrency: Currency<*>, out QuoteCurrency: Currency<*>>(
     val baseCurrency: BaseCurrency,
@@ -17,7 +18,7 @@ data class TradingPair<out BaseCurrency: Currency<*>, out QuoteCurrency: Currenc
 
 data class TradingPairs(
     private val tradingPairs: List<TradingPair<*, *>>
-): List<TradingPair<*, *>> by tradingPairs {
+): List<TradingPair<*, *>> by tradingPairs, CryptoMarketplaceResults.Data {
 
     inline fun <reified QuoteCurrency: Currency<*>> getTradingPairsWithQuoteCurrency(): List<TradingPair<*, QuoteCurrency>> {
         return filterIsInstance<TradingPair<*, QuoteCurrency>>()
