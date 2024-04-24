@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    id("org.jetbrains.kotlin.plugin.serialization")
+    alias(libs.plugins.kapt)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.vukasinprvulovic.application"
+    namespace = "com.vukasinprvulovic.storage"
     compileSdk = 34
 
     defaultConfig {
@@ -31,8 +32,12 @@ android {
 }
 
 dependencies {
-    api(project(":core:utils"))
+    implementation(project(":core:utils"))
+    implementation(project(":core:application"))
+    implementation(project(":core:configuration"))
 
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
     implementation(libs.kotlinx.serialization)
 
     implementation(libs.androidx.core.ktx)
@@ -40,6 +45,6 @@ dependencies {
     implementation(libs.material)
 
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotest.assertion)
 }
