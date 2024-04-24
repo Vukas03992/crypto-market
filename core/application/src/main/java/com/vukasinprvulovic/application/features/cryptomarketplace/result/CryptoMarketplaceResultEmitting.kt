@@ -16,7 +16,7 @@ internal interface CryptoMarketplaceEmitter: CryptoMarketplaceResultSubscriber {
 }
 
 class CryptoMarketplaceResultEmitting @Inject constructor(): CryptoMarketplaceEmitter {
-    override val resultsFlow: MutableStateFlow<CryptoMarketplaceResults> = MutableStateFlow(CryptoMarketplaceResults(emptyList(), emptyList()))
+    override val resultsFlow: MutableStateFlow<CryptoMarketplaceResults> = MutableStateFlow(CryptoMarketplaceResults(emptySet(), emptyList()))
 
     override val currentResults: CryptoMarketplaceResults
         get() = resultsFlow.value

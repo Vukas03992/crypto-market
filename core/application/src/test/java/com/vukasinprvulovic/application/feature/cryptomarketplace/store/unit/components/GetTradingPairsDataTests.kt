@@ -33,7 +33,7 @@ class GetTradingPairsDataTests {
         val tradingPairs = TradingPairs(listOf(TradingPair(UnitedStatesDollar, UnitedStatesDollar, Trading.Data(emptyList()))))
         coEvery { tradingPairsRemoteSource.fetchTradingPairsData(any()) } returns Result.success(TradingPairs(tradingPairs.map { it.copy(tradingData = tradingData) }))
         val getTradingPairsData = GetTradingPairsData(tradingPairsRemoteSource)
-        val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.GetTradingPairsData, CryptoMarketplaceResults(listOf(TradingPairsAreMade(tradingPairs.copy()))))
+        val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.GetTradingPairsData, CryptoMarketplaceResults(setOf(TradingPairsAreMade(tradingPairs.copy()))))
         var results: CryptoMarketplaceResults? = null
         flow {
             getTradingPairsData.handle(context, this)

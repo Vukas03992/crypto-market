@@ -19,7 +19,7 @@ class CryptoMarketplaceScoreTests {
     fun `when store is being visited without defined actions then store visiting is without results`() = runTest {
         val store = InternalCryptoMarketplaceStore(emptySet())
         var results: CryptoMarketplaceResults? = null
-        store.visitStore(CryptoMarketplaceResults(emptyList(), emptyList()), CryptoMarketplaceStoreAction.Finish).collect {
+        store.visitStore(CryptoMarketplaceResults(emptySet(), emptyList()), CryptoMarketplaceStoreAction.Finish).collect {
             results = it
         }
         results.shouldBeNull()
@@ -31,13 +31,13 @@ class CryptoMarketplaceScoreTests {
             override val actionIdentifier: String = CryptoMarketplaceStoreAction.Start.identifier
             override suspend fun handle(context: CryptoMarketplaceStore.Context, emitter: FlowCollector<CryptoMarketplaceResults>) {
                 context.nextAction = CryptoMarketplaceStoreAction.Finish
-                emitter.emit(CryptoMarketplaceResults(listOf(OpenActionResult), emptyList()))
+                emitter.emit(CryptoMarketplaceResults(setOf(OpenActionResult), emptyList()))
             }
         }
         val store = InternalCryptoMarketplaceStore(setOf(openActionHandler))
-        val results: CryptoMarketplaceResults = store.visitStore(CryptoMarketplaceResults(emptyList(), emptyList()), CryptoMarketplaceStoreAction.Start).first()
+        val results: CryptoMarketplaceResults = store.visitStore(CryptoMarketplaceResults(emptySet(), emptyList()), CryptoMarketplaceStoreAction.Start).first()
         results.data().size shouldBe 1
-        results.data()[0].shouldBeInstanceOf<OpenActionResult>()
+        results.data().toList()[0].shouldBeInstanceOf<OpenActionResult>()
     }
 
     data object OpenActionResult: CryptoMarketplaceResults.Data

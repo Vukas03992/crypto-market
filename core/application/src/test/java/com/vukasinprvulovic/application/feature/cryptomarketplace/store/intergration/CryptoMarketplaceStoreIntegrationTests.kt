@@ -12,8 +12,10 @@ import com.vukasinprvulovic.application.entities.trading.data.price.bid.BID
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPair
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
+import com.vukasinprvulovic.application.features.cryptomarketplace.searching.strategy.DefaultCryptoMarketplaceSearchingStrategy
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.StartActionHandler
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.FilterTradingPairsBasedOnSearchingToken
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -34,7 +36,7 @@ class CryptoMarketplaceStoreIntegrationTests {
         val tradingPairsRemoteSource = getTradingPairsRemoteSource(Result.success(tradingPairs))
         val tradingPairsMaker = TradingPairsMaker(currencyStorage)
         val getTradingPairsData = GetTradingPairsData(tradingPairsRemoteSource)
-        val handlers = setOf(StartActionHandler(), tradingPairsMaker, getTradingPairsData)
+        val handlers = setOf(StartActionHandler(), tradingPairsMaker, getTradingPairsData, FilterTradingPairsBasedOnSearchingToken(DefaultCryptoMarketplaceSearchingStrategy()))
         val store = InternalCryptoMarketplaceStore(handlers)
         var receivedResultsNumber = 0
         var lastEmittedResult: CryptoMarketplaceResults? = null
