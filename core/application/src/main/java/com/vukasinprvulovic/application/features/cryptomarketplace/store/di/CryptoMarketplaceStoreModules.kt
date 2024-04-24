@@ -5,6 +5,7 @@ import com.vukasinprvulovic.application.features.cryptomarketplace.store.Interna
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandler
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.OpenActionHandler
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.CryptoMarketplaceTradingPairsMaker
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,6 +23,10 @@ internal abstract class CryptoMarketplaceStoreModule {
     @Binds
     @IntoSet
     abstract fun provideMakeTradingPairsActionHandler(cryptoMarketplaceTradingPairsMaker: CryptoMarketplaceTradingPairsMaker): CryptoMarketplaceStoreActionHandler
+
+    @Binds
+    @IntoSet
+    abstract fun provideGetTradingPairsDataActionHandler(getTradingPairsData: GetTradingPairsData): CryptoMarketplaceStoreActionHandler
 
     @Binds
     abstract fun bindCryptoMarketplaceStore(internalCryptoMarketplaceStore: InternalCryptoMarketplaceStore): CryptoMarketplaceStore

@@ -1,4 +1,4 @@
-package com.vukasinprvulovic.application.feature.cryptomarketplace.store
+package com.vukasinprvulovic.application.feature.cryptomarketplace.store.unit
 
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore

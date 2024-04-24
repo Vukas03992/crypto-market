@@ -1,4 +1,4 @@
-package com.vukasinprvulovic.application.feature.cryptomarketplace.store.components
+package com.vukasinprvulovic.application.feature.cryptomarketplace.store.unit.components
 
 import com.vukasinprvulovic.application.data.sources.storage.currency.CurrencyStorage
 import com.vukasinprvulovic.application.entities.currency.CryptoCurrency
@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
-class CryptoMarketplaceTradingPairsMakerTests {
+class TradingPairsMakerTests {
 
     @Test
     fun `when trading pairs maker is executed, no results are emitted since it is internal action`() = runTest {

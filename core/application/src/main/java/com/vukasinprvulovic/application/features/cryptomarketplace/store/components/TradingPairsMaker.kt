@@ -21,6 +21,7 @@ internal class CryptoMarketplaceTradingPairsMaker @Inject constructor(
 
     override suspend fun handle(context: CryptoMarketplaceStore.Context, emitter: FlowCollector<CryptoMarketplaceResults>) {
         val actionHandlingResults = foldResultsSuspend {
+            context.nextAction = CryptoMarketplaceStoreAction.Finish
             val cryptoCurrencies = currencyStorage.retrieveCurrencies(CryptoCurrencyStorageFilter())
             val baseCurrencies = cryptoCurrencies.getOrThrow()
             val quoteCurrency = UnitedStatesDollar
@@ -28,7 +29,7 @@ internal class CryptoMarketplaceTradingPairsMaker @Inject constructor(
                 TradingPair(baseCurrency, quoteCurrency, Trading.Data())
             }
             context.currentCryptoMarketplaceResults.addData(TradingPairsAreMade(TradingPairs(tradingPairsList)))
-            context.nextAction = CryptoMarketplaceStoreAction.Finish
+            context.nextAction = CryptoMarketplaceStoreAction.GetTradingPairsData
             Result.success(Unit)
         }
         actionHandlingResults.onFailure {

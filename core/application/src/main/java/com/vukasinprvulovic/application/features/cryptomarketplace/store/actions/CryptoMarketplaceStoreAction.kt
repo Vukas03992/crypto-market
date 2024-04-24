@@ -16,6 +16,9 @@ sealed interface CryptoMarketplaceStoreAction {
     data object MakeTradingPairs: CryptoMarketplaceStoreAction {
         override val identifier: String = "MakeTradingPairs"
     }
+    data object GetTradingPairsData: CryptoMarketplaceStoreAction {
+        override val identifier: String = "GetTradingPairsData"
+    }
 }
 
 internal interface CryptoMarketplaceStoreActionHandler {
