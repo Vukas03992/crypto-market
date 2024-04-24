@@ -14,7 +14,7 @@ import com.vukasinprvulovic.utils.kotlin.results.foldResultsSuspend
 import kotlinx.coroutines.flow.FlowCollector
 import javax.inject.Inject
 
-internal class CryptoMarketplaceTradingPairsMaker @Inject constructor(
+internal class TradingPairsMaker @Inject constructor(
     private val currencyStorage: CurrencyStorage
 ): CryptoMarketplaceStoreActionHandler {
     override val actionIdentifier: String = CryptoMarketplaceStoreAction.MakeTradingPairs.identifier
@@ -33,6 +33,7 @@ internal class CryptoMarketplaceTradingPairsMaker @Inject constructor(
             Result.success(Unit)
         }
         actionHandlingResults.onFailure {
+            println(it)
             context.currentCryptoMarketplaceResults.addError(CryptoMarketplaceResults.Error(it))
         }
     }

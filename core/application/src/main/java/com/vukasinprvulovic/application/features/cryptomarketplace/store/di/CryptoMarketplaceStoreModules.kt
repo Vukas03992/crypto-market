@@ -3,8 +3,8 @@ package com.vukasinprvulovic.application.features.cryptomarketplace.store.di
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandler
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.OpenActionHandler
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.CryptoMarketplaceTradingPairsMaker
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.StartActionHandler
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
 import dagger.Binds
 import dagger.Module
@@ -18,11 +18,11 @@ internal abstract class CryptoMarketplaceStoreModule {
 
     @Binds
     @IntoSet
-    abstract fun provideOpenActionHandler(openActionHandler: OpenActionHandler): CryptoMarketplaceStoreActionHandler
+    abstract fun provideOpenActionHandler(startActionHandler: StartActionHandler): CryptoMarketplaceStoreActionHandler
 
     @Binds
     @IntoSet
-    abstract fun provideMakeTradingPairsActionHandler(cryptoMarketplaceTradingPairsMaker: CryptoMarketplaceTradingPairsMaker): CryptoMarketplaceStoreActionHandler
+    abstract fun provideMakeTradingPairsActionHandler(tradingPairsMaker: TradingPairsMaker): CryptoMarketplaceStoreActionHandler
 
     @Binds
     @IntoSet

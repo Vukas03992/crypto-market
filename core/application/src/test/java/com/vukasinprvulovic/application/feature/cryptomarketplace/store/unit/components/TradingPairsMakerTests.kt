@@ -11,7 +11,7 @@ import com.vukasinprvulovic.application.features.cryptomarketplace.result.Crypto
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.getDataOfInstance
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreAction
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.CryptoMarketplaceTradingPairsMaker
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsAreMade
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldNotBeEmpty
@@ -31,7 +31,7 @@ class TradingPairsMakerTests {
     fun `when trading pairs maker is executed, no results are emitted since it is internal action`() = runTest {
         val currencyStorage = mockk<CurrencyStorage>()
         coEvery { currencyStorage.retrieveCurrencies<Currency<*>>(any()) } returns Result.success(emptyList())
-        val tradingPairsMaker = CryptoMarketplaceTradingPairsMaker(currencyStorage)
+        val tradingPairsMaker = TradingPairsMaker(currencyStorage)
         val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.MakeTradingPairs, CryptoMarketplaceResults())
         var results: CryptoMarketplaceResults? = null
         flow {
@@ -46,7 +46,7 @@ class TradingPairsMakerTests {
     fun `when trading pairs maker is executed with all expected inputs then context contains action handing results`() = runTest {
         val currencyStorage = mockk<CurrencyStorage>()
         coEvery { currencyStorage.retrieveCurrencies<Currency<*>>(any()) } returns Result.success(listOf(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", Ticker(symbol = "BTC")))))
-        val tradingPairsMaker = CryptoMarketplaceTradingPairsMaker(currencyStorage)
+        val tradingPairsMaker = TradingPairsMaker(currencyStorage)
         val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.MakeTradingPairs, CryptoMarketplaceResults())
         flow {
             tradingPairsMaker.handle(context, this)
@@ -62,7 +62,7 @@ class TradingPairsMakerTests {
     fun `when trading pairs maker is executed but currency storage fails then context contains error and no action results`() = runTest {
         val currencyStorage = mockk<CurrencyStorage>()
         coEvery { currencyStorage.retrieveCurrencies<Currency<*>>(any()) } returns Result.failure(IllegalStateException("Currency storage failed"))
-        val tradingPairsMaker = CryptoMarketplaceTradingPairsMaker(currencyStorage)
+        val tradingPairsMaker = TradingPairsMaker(currencyStorage)
         val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.MakeTradingPairs, CryptoMarketplaceResults())
         flow {
             tradingPairsMaker.handle(context, this)
