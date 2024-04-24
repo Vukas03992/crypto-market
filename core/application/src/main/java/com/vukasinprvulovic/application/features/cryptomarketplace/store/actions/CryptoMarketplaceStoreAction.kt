@@ -7,10 +7,10 @@ import javax.inject.Inject
 
 sealed interface CryptoMarketplaceStoreAction {
     val identifier: String
-    data object Open: CryptoMarketplaceStoreAction {
+    data object Start: CryptoMarketplaceStoreAction {
         override val identifier: String = "Open"
     }
-    data object Close: CryptoMarketplaceStoreAction {
+    data object Finish: CryptoMarketplaceStoreAction {
         override val identifier: String = "Close"
     }
 }
@@ -21,10 +21,10 @@ internal interface CryptoMarketplaceStoreActionHandler {
 }
 
 internal class OpenActionHandler @Inject constructor(): CryptoMarketplaceStoreActionHandler {
-    override val actionIdentifier: String = CryptoMarketplaceStoreAction.Open.identifier
+    override val actionIdentifier: String = CryptoMarketplaceStoreAction.Start.identifier
 
     override suspend fun handle(context: CryptoMarketplaceStore.Context, emitter: FlowCollector<CryptoMarketplaceResults>) {
         emitter.emit(context.currentCryptoMarketplaceResults)
-        context.nextAction = CryptoMarketplaceStoreAction.Close
+        context.nextAction = CryptoMarketplaceStoreAction.Finish
     }
 }

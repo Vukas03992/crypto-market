@@ -1,11 +1,11 @@
 package com.vukasinprvulovic.application.features.cryptomarketplace.store.di
 
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandler
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.OpenActionHandler
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
@@ -14,10 +14,10 @@ import dagger.multibindings.IntoSet
 @InstallIn(SingletonComponent::class)
 internal abstract class CryptoMarketplaceStoreModule {
 
-    @Provides
+    @Binds
     @IntoSet
     abstract fun provideOpenActionHandler(openActionHandler: OpenActionHandler): CryptoMarketplaceStoreActionHandler
 
     @Binds
-    abstract fun bindCryptoMarketplaceStore(internalCryptoMarketplaceStore: InternalCryptoMarketplaceStore): CryptoMarketplaceStoreModule
+    abstract fun bindCryptoMarketplaceStore(internalCryptoMarketplaceStore: InternalCryptoMarketplaceStore): CryptoMarketplaceStore
 }

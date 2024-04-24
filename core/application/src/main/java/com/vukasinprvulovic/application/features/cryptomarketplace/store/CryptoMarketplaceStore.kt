@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface CryptoMarketplaceStore {
-    fun openStore(initialCryptoMarketplaceResults: CryptoMarketplaceResults): Flow<CryptoMarketplaceResults>
+    fun visitStore(initialCryptoMarketplaceResults: CryptoMarketplaceResults, initialAction: CryptoMarketplaceStoreAction = CryptoMarketplaceStoreAction.Start): Flow<CryptoMarketplaceResults>
 
     data class Context(
         var nextAction: CryptoMarketplaceStoreAction,
@@ -20,9 +20,9 @@ internal class InternalCryptoMarketplaceStore @Inject constructor(
     private val actionHandlers: Set<CryptoMarketplaceStoreActionHandler>
 ): CryptoMarketplaceStore {
 
-    override fun openStore(initialCryptoMarketplaceResults: CryptoMarketplaceResults): Flow<CryptoMarketplaceResults> = flow {
-        val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.Open, initialCryptoMarketplaceResults)
-        while(context.nextAction !is CryptoMarketplaceStoreAction.Close) {
+    override fun visitStore(initialCryptoMarketplaceResults: CryptoMarketplaceResults, initialAction: CryptoMarketplaceStoreAction): Flow<CryptoMarketplaceResults> = flow {
+        val context = CryptoMarketplaceStore.Context(initialAction, initialCryptoMarketplaceResults)
+        while(context.nextAction !is CryptoMarketplaceStoreAction.Finish) {
             val actionHandler = actionHandlers.find { it.actionIdentifier == context.nextAction.identifier } ?: error("No action handler found for ${context.nextAction.identifier}")
             actionHandler.handle(context, this)
         }
