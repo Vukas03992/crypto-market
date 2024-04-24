@@ -36,8 +36,8 @@ class CryptoMarketplaceScoreTests {
         }
         val store = InternalCryptoMarketplaceStore(setOf(openActionHandler))
         val results: CryptoMarketplaceResults = store.visitStore(CryptoMarketplaceResults(emptyList(), emptyList()), CryptoMarketplaceStoreAction.Start).first()
-        results.data.size shouldBe 1
-        results.data[0].shouldBeInstanceOf<OpenActionResult>()
+        results.data().size shouldBe 1
+        results.data()[0].shouldBeInstanceOf<OpenActionResult>()
     }
 
     data object OpenActionResult: CryptoMarketplaceResults.Data

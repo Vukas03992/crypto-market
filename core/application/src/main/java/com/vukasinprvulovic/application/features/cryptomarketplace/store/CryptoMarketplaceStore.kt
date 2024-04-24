@@ -12,7 +12,7 @@ interface CryptoMarketplaceStore {
 
     data class Context(
         var nextAction: CryptoMarketplaceStoreAction,
-        var currentCryptoMarketplaceResults: CryptoMarketplaceResults
+        val currentCryptoMarketplaceResults: CryptoMarketplaceResults
     )
 }
 
