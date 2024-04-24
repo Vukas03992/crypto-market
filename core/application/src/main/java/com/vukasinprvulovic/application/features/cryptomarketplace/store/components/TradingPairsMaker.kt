@@ -33,8 +33,8 @@ internal class TradingPairsMaker @Inject constructor(
             Result.success(Unit)
         }
         actionHandlingResults.onFailure {
-            println(it)
             context.currentCryptoMarketplaceResults.addError(CryptoMarketplaceResults.Error(it))
+            emitter.emit(context.currentCryptoMarketplaceResults)
         }
     }
 }

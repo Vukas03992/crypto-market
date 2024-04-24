@@ -8,7 +8,8 @@ import com.vukasinprvulovic.application.entities.trading.pair.TradingPair
 class TickersAPITickerProducingStrategy: TickerProducingStrategy<TradingPair<*,*>> {
     override fun produceTicker(materials: TradingPair<*, *>): Ticker {
         val baseCurrency = materials.baseCurrency
-        val baseCurrencyTicker = if (baseCurrency is HasTicker) baseCurrency.ticker.symbol else error("Base currency ticker not found!")
+        var baseCurrencyTicker = if (baseCurrency is HasTicker) baseCurrency.ticker.symbol else error("Base currency ticker not found!")
+        if (baseCurrencyTicker.length > 3) baseCurrencyTicker = "${baseCurrencyTicker}:"
         val quoteCurrency = materials.quoteCurrency
         val quoteCurrencyTicker = if (quoteCurrency is HasTicker) quoteCurrency.ticker.symbol else error("Quote currency ticker not found!")
         return Ticker("t$baseCurrencyTicker${quoteCurrencyTicker}")

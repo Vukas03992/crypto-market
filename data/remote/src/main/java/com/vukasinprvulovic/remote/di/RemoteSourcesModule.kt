@@ -6,13 +6,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteSourcesModule {
 
     @Provides
-    @Singleton
     fun provideTradingPairRemoteSource(tradingPairsRemoteSystem: TradingPairsRemoteSystem): TradingPairsRemoteSource = tradingPairsRemoteSystem
 }

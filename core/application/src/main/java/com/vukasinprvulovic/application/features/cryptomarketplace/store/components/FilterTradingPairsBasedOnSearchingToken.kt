@@ -30,6 +30,7 @@ internal class FilterTradingPairsBasedOnSearchingToken @Inject constructor(
         }
         actionHandlingResults.onFailure {
             context.currentCryptoMarketplaceResults.addError(CryptoMarketplaceResults.Error(it))
+            emitter.emit(context.currentCryptoMarketplaceResults)
         }
     }
 }

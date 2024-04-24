@@ -4,40 +4,45 @@ import com.vukasinprvulovic.application.features.cryptomarketplace.searching.str
 import com.vukasinprvulovic.application.features.cryptomarketplace.searching.strategy.DefaultCryptoMarketplaceSearchingStrategy
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandler
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandlers
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.StartActionHandler
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.FilterTradingPairsBasedOnSearchingToken
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.TradingPairsMaker
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.multibindings.IntoSet
+
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class CryptoMarketplaceStoreModule {
+internal object CryptoMarketplaceStoreModule {
 
-    @Binds
-    @IntoSet
-    abstract fun provideOpenActionHandler(startActionHandler: StartActionHandler): CryptoMarketplaceStoreActionHandler
+    @Provides
+    fun provideCryptoMarketplaceStoreActionHandlers(
+        startActionHandler: StartActionHandler,
+        tradingPairsMaker: TradingPairsMaker,
+        getTradingPairsData: GetTradingPairsData,
+        filterTradingPairsBasedOnSearchingToken: FilterTradingPairsBasedOnSearchingToken
+    ): CryptoMarketplaceStoreActionHandlers = CryptoMarketplaceStoreActionHandlers(
+        setOf(
+            startActionHandler,
+            tradingPairsMaker,
+            getTradingPairsData,
+            filterTradingPairsBasedOnSearchingToken
+        )
+    )
 
-    @Binds
-    @IntoSet
-    abstract fun provideMakeTradingPairsActionHandler(tradingPairsMaker: TradingPairsMaker): CryptoMarketplaceStoreActionHandler
+    @Provides
+    fun provideCryptoMarketplaceSearchingStrategy(defaultCryptoMarketplaceSearchingStrategy: DefaultCryptoMarketplaceSearchingStrategy): CryptoMarketplaceSearchingStrategy = defaultCryptoMarketplaceSearchingStrategy
+}
 
-    @Binds
-    @IntoSet
-    abstract fun provideGetTradingPairsDataActionHandler(getTradingPairsData: GetTradingPairsData): CryptoMarketplaceStoreActionHandler
-
-    @Binds
-    @IntoSet
-    abstract fun provideFilterTradingPairsBySearchTokenActionHandler(filterTradingPairsBasedOnSearchingToken: FilterTradingPairsBasedOnSearchingToken): CryptoMarketplaceStoreActionHandler
+@Module
+@InstallIn(SingletonComponent::class)
+internal abstract class CryptoMarketplaceStoreBindsModule {
 
     @Binds
     abstract fun bindCryptoMarketplaceStore(internalCryptoMarketplaceStore: InternalCryptoMarketplaceStore): CryptoMarketplaceStore
-
-    @Binds
-    abstract fun bindCryptoMarketplaceSearchingStrategy(defaultCryptoMarketplaceSearchingStrategy: DefaultCryptoMarketplaceSearchingStrategy): CryptoMarketplaceSearchingStrategy
 }

@@ -26,7 +26,7 @@ import javax.inject.Singleton
 @Singleton
 class Ktor @Inject constructor(
     engine: HttpClientEngine,
-    userConfig: HttpClientConfig<out HttpClientEngineConfig> = defaultHttpClientConfig
+    userConfig: HttpClientConfig<out HttpClientEngineConfig>
 ) {
     val client = HttpClient(engine, userConfig)
 
@@ -51,7 +51,7 @@ class Ktor @Inject constructor(
     }
 }
 
-private val defaultHttpClientConfig = HttpClientConfig<HttpClientEngineConfig>().apply {
+internal val defaultHttpClientConfig = HttpClientConfig<HttpClientEngineConfig>().apply {
     expectSuccess = false
     install(Logging) {
         level = LogLevel.ALL

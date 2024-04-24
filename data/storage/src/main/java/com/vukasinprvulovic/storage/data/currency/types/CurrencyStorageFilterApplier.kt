@@ -7,3 +7,7 @@ interface CurrencyStorageFilterApplier<RetrievedCurrency : Currency<*>> {
 
     suspend fun getFilteredCurrencies(): Result<List<RetrievedCurrency>>
 }
+
+class CurrencyStorageFilterAppliers(
+    val set: Set<CurrencyStorageFilterApplier<*>>
+)

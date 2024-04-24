@@ -29,6 +29,10 @@ internal interface CryptoMarketplaceStoreActionHandler {
     suspend fun handle(context: CryptoMarketplaceStore.Context, emitter: FlowCollector<CryptoMarketplaceResults>)
 }
 
+internal class CryptoMarketplaceStoreActionHandlers(
+    val set: Set<CryptoMarketplaceStoreActionHandler>
+)
+
 internal class StartActionHandler @Inject constructor(): CryptoMarketplaceStoreActionHandler {
     override val actionIdentifier: String = CryptoMarketplaceStoreAction.Start.identifier
 

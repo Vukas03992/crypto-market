@@ -1,6 +1,5 @@
 package com.vukasinprvulovic.application.features.cryptomarketplace.lifecycle
 
-import com.vukasinprvulovic.application.entities.currency.CryptoCurrency
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
@@ -33,22 +32,42 @@ class CryptoMarketplaceLifecycleManager @Inject constructor(): CryptoMarketplace
     private val mutex: Mutex = Mutex()
     override var currentState: CryptoMarketplaceLifecycle.State = CryptoMarketplaceLifecycle.State.NOTINITIALIZED
         private set
+    private var deferredStartAction: CryptoMarketplaceLifecycle.State.STARTED? = null
+    private var deferredResumeAction: CryptoMarketplaceLifecycle.State.RESUMED? = null
 
     override suspend fun initialize() = mutex.withLock {
         if (currentState == CryptoMarketplaceLifecycle.State.NOTINITIALIZED) {
             currentState = CryptoMarketplaceLifecycle.State.INITIALIZED(currentState)
             listeners.forEach { it(currentState) }
+            if (deferredStartAction != null) {
+                deferredStartAction = null
+                currentState = CryptoMarketplaceLifecycle.State.STARTED(currentState)
+                listeners.forEach { it(currentState) }
+            }
         }
     }
 
     override suspend fun start() = mutex.withLock {
+        if (currentState is CryptoMarketplaceLifecycle.State.NOTINITIALIZED) {
+            deferredStartAction = CryptoMarketplaceLifecycle.State.STARTED(currentState)
+            return
+        }
         if (currentState is CryptoMarketplaceLifecycle.State.INITIALIZED || currentState is CryptoMarketplaceLifecycle.State.STOPPED) {
             currentState = CryptoMarketplaceLifecycle.State.STARTED(currentState)
             listeners.forEach { it(currentState) }
+            if (deferredResumeAction != null) {
+                deferredResumeAction = null
+                currentState = CryptoMarketplaceLifecycle.State.RESUMED(currentState)
+                listeners.forEach { it(currentState) }
+            }
         }
     }
 
     override suspend fun resume() = mutex.withLock {
+        if (currentState is CryptoMarketplaceLifecycle.State.NOTINITIALIZED || currentState is CryptoMarketplaceLifecycle.State.INITIALIZED) {
+            deferredResumeAction = CryptoMarketplaceLifecycle.State.RESUMED(currentState)
+            return
+        }
         if (currentState is CryptoMarketplaceLifecycle.State.STARTED || currentState is CryptoMarketplaceLifecycle.State.PAUSED) {
             currentState = CryptoMarketplaceLifecycle.State.RESUMED(currentState)
             listeners.forEach { it(currentState) }

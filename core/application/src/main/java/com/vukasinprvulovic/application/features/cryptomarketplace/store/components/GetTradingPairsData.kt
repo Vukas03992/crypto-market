@@ -23,11 +23,14 @@ internal class GetTradingPairsData @Inject constructor(
             val fetchingDataResults = tradingPairsRemoteSource.fetchTradingPairsData(tradingPairsWithoutData.tradingPairs)
             val tradingPairsWithData = fetchingDataResults.getOrThrow()
             context.currentCryptoMarketplaceResults.addData(tradingPairsWithData)
-            if (shouldEmitResults(context)) emitter.emit(context.currentCryptoMarketplaceResults)
+            if (shouldEmitResults(context)) {
+                emitter.emit(context.currentCryptoMarketplaceResults)
+            }
             Result.success(Unit)
         }
         actionHandlingResults.onFailure {
             context.currentCryptoMarketplaceResults.addError(CryptoMarketplaceResults.Error(it))
+            emitter.emit(context.currentCryptoMarketplaceResults)
         }
     }
 
