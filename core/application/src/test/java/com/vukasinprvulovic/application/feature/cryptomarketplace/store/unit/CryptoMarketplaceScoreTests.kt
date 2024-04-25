@@ -5,6 +5,7 @@ import com.vukasinprvulovic.application.features.cryptomarketplace.store.CryptoM
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreAction
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandler
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandlers
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
@@ -17,7 +18,7 @@ class CryptoMarketplaceScoreTests {
 
     @Test
     fun `when store is being visited without defined actions then store visiting is without results`() = runTest {
-        val store = InternalCryptoMarketplaceStore(emptySet())
+        val store = InternalCryptoMarketplaceStore(CryptoMarketplaceStoreActionHandlers(emptySet()))
         var results: CryptoMarketplaceResults? = null
         store.visitStore(CryptoMarketplaceResults(emptySet(), emptyList()), CryptoMarketplaceStoreAction.Finish).collect {
             results = it
@@ -34,7 +35,7 @@ class CryptoMarketplaceScoreTests {
                 emitter.emit(CryptoMarketplaceResults(setOf(OpenActionResult), emptyList()))
             }
         }
-        val store = InternalCryptoMarketplaceStore(setOf(openActionHandler))
+        val store = InternalCryptoMarketplaceStore(CryptoMarketplaceStoreActionHandlers(setOf(openActionHandler)))
         val results: CryptoMarketplaceResults = store.visitStore(CryptoMarketplaceResults(emptySet(), emptyList()), CryptoMarketplaceStoreAction.Start).first()
         results.data().size shouldBe 1
         results.data().toList()[0].shouldBeInstanceOf<OpenActionResult>()

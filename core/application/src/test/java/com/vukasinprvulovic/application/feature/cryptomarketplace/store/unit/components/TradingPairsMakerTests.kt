@@ -45,7 +45,7 @@ class TradingPairsMakerTests {
     @Test
     fun `when trading pairs maker is executed with all expected inputs then context contains action handing results`() = runTest {
         val currencyStorage = mockk<CurrencyStorage>()
-        coEvery { currencyStorage.retrieveCurrencies<Currency<*>>(any()) } returns Result.success(listOf(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", Ticker(symbol = "BTC")))))
+        coEvery { currencyStorage.retrieveCurrencies<Currency<*>>(any()) } returns Result.success(listOf(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", "",Ticker(symbol = "BTC")))))
         val tradingPairsMaker = TradingPairsMaker(currencyStorage)
         val context = CryptoMarketplaceStore.Context(CryptoMarketplaceStoreAction.MakeTradingPairs, CryptoMarketplaceResults())
         flow {

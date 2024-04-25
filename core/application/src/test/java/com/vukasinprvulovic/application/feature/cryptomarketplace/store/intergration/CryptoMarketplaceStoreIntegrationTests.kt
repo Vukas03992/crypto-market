@@ -14,6 +14,7 @@ import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
 import com.vukasinprvulovic.application.features.cryptomarketplace.searching.strategy.DefaultCryptoMarketplaceSearchingStrategy
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.InternalCryptoMarketplaceStore
+import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.CryptoMarketplaceStoreActionHandlers
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.actions.StartActionHandler
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.FilterTradingPairsBasedOnSearchingToken
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.GetTradingPairsData
@@ -30,14 +31,14 @@ class CryptoMarketplaceStoreIntegrationTests {
 
     @Test
     fun `when all action handlers are giving expected results then store emits expected results to CryptoMarketplace`() = runTest {
-        val tradingPair = TradingPair(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", Ticker("BTC"))), UnitedStatesDollar, Trading.Data(listOf(BID(1f, 1f))))
+        val tradingPair = TradingPair(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", "", Ticker("BTC"))), UnitedStatesDollar, Trading.Data(listOf(BID(1f, 1f))))
         val tradingPairs = TradingPairs(listOf(tradingPair))
-        val currencyStorage = getCurrencyStorage(Result.success(listOf(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", Ticker("BTC"))))))
+        val currencyStorage = getCurrencyStorage(Result.success(listOf(CryptoCurrency(CryptoProperties("BTC", "Bitcoin", "Bitcoin", "BTC", "", Ticker("BTC"))))))
         val tradingPairsRemoteSource = getTradingPairsRemoteSource(Result.success(tradingPairs))
         val tradingPairsMaker = TradingPairsMaker(currencyStorage)
         val getTradingPairsData = GetTradingPairsData(tradingPairsRemoteSource)
         val handlers = setOf(StartActionHandler(), tradingPairsMaker, getTradingPairsData, FilterTradingPairsBasedOnSearchingToken(DefaultCryptoMarketplaceSearchingStrategy()))
-        val store = InternalCryptoMarketplaceStore(handlers)
+        val store = InternalCryptoMarketplaceStore(CryptoMarketplaceStoreActionHandlers(handlers))
         var receivedResultsNumber = 0
         var lastEmittedResult: CryptoMarketplaceResults? = null
         store.visitStore(CryptoMarketplaceResults()).collect {
