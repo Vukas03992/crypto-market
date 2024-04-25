@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,6 +48,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vukasinprvulovic.design.colors.palettes.CryptoMarketplacePalette
 import com.vukasinprvulovic.design.types.poppins
 import com.vukasinprvulovic.elements.features.marketplace.currency.MarketplaceCurrencyIcon
+import com.vukasinprvulovic.elements.features.marketplace.error.MarketplaceError
+import com.vukasinprvulovic.elements.features.marketplace.noresults.MarketplaceNoResults
 import com.vukasinprvulovic.elements.features.marketplace.tradingpairs.TradingPair
 import com.vukasinprvulovic.elements.features.marketplace.tradingpairs.TradingPairPrice
 import com.vukasinprvulovic.elements.utils.lifecycle.LifecycleEvents
@@ -93,15 +96,22 @@ private fun MarketplaceContent(
             )
         },
     ) { paddingValues ->
-        LazyColumn(
-            state = listState,
-            modifier = Modifier.padding(top = paddingValues.calculateTopPadding() - 8.dp)
-        ) {
-            items(viewState.pairs.size,
-                key = { viewState.pairs[it].tradingPairTicker }) { index ->
-                val tradingPair = viewState.pairs[index]
-                val paddingTop = if (index == 0) 24.dp else 8.dp
-                MarketplaceTradingPairItem(tradingPair, modifier = Modifier.padding(top = paddingTop))
+
+        if (viewState.isError) {
+            MarketplaceError()
+        } else if (viewState.noSearchingResults) {
+            MarketplaceNoResults()
+        } else {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier.padding(top = paddingValues.calculateTopPadding() - 8.dp)
+            ) {
+                items(viewState.pairs.size,
+                    key = { viewState.pairs[it].tradingPairTicker }) { index ->
+                    val tradingPair = viewState.pairs[index]
+                    val paddingTop = if (index == 0) 24.dp else 8.dp
+                    MarketplaceTradingPairItem(tradingPair, modifier = Modifier.padding(top = paddingTop))
+                }
             }
         }
     }
@@ -146,6 +156,7 @@ private fun MarketplaceAppBar(
                     Text(text = "Crypto Marketplace", style = MaterialTheme.typography.titleLarge, fontFamily = poppins)
                 }
 
+                val keyboard = LocalSoftwareKeyboardController.current
                 SearchBar(
                     query = searchingToken.value,
                     onQueryChange = {
@@ -157,6 +168,7 @@ private fun MarketplaceAppBar(
                     },
                     onSearch = {
                         onSearchQueryChange(it)
+                        keyboard?.hide()
                     },
                     active = false,
                     onActiveChange = {},
@@ -216,17 +228,21 @@ private fun MarketplaceTradingPairItem(
                 MarketplaceCurrencyIcon(currencyName = tradingPairModel.baseCurrencyName, currencyLogoUrl = tradingPairModel.baseCurrencyLogo)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
                     TradingPair(
-                        baseCurrencyName = tradingPairModel.baseCurrencyName,
-                        tradingPairTicker = tradingPairModel.tradingPairTicker
+                        baseCurrencyName = tradingPairModel.annotatedBaseCurrencyName,
+                        tradingPairTicker = tradingPairModel.tradingPairTicker,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .weight(1f)
                     )
                     TradingPairPrice(
                         marketPrice = tradingPairModel.formattedPrice,
                         priceChange = tradingPairModel.formattedPriceChange,
-                        modifier = Modifier.fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(0.4f)
                     )
                 }
             }

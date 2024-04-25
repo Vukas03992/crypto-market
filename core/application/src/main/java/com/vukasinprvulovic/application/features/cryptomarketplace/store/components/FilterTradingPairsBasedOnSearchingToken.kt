@@ -24,7 +24,7 @@ internal class FilterTradingPairsBasedOnSearchingToken @Inject constructor(
             if (searchingToken?.token == null) return@foldResultsSuspend Result.success(Unit)
             val tradingPairs = context.currentCryptoMarketplaceResults.data().requireDataOfInstance<TradingPairs>()
             val filteredTradingPairs = tradingPairs.filter { searchingStrategy.matches(searchingToken.token, it) }
-            context.currentCryptoMarketplaceResults.addData(SearchedTradingPairs(TradingPairs(filteredTradingPairs)))
+            context.currentCryptoMarketplaceResults.addData(SearchedTradingPairs(searchingToken.token, TradingPairs(filteredTradingPairs)))
             emitter.emit(context.currentCryptoMarketplaceResults)
             Result.success(Unit)
         }
@@ -40,5 +40,6 @@ internal data class SearchingToken(
 ) : CryptoMarketplaceResults.Data
 
 data class SearchedTradingPairs(
+    val searchingToken: String,
     val results: TradingPairs
 ) : CryptoMarketplaceResults.FinalData
