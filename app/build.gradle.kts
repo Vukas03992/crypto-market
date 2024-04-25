@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":data:storage"))
     implementation(project(":data:remote:network"))
     implementation(project(":data:remote"))
+    implementation(project(":data:device"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

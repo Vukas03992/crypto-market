@@ -40,12 +40,16 @@ class CryptoMarketplace @Inject constructor(
     }
 
     private fun setUpCryptoMarketplaceRefresher() {
-        cryptoMarketplaceRefresher.action = {
-            val initialResults = CryptoMarketplaceResults(
-                cryptoMarketplaceSearchingMachine.currentSearchToken()?.let { setOf(SearchingToken(it)) } ?: emptySet()
-            )
-            cryptoMarketplaceStore.visitStore(initialResults).collect {
-                cryptoMarketplaceEmitting.resultsFlow.value = it
+        cryptoMarketplaceRefresher.action = { checkingConditionsResults ->
+            if (checkingConditionsResults.areMet) {
+                val initialResults = CryptoMarketplaceResults(
+                    cryptoMarketplaceSearchingMachine.currentSearchToken()?.let { setOf(SearchingToken(it)) } ?: emptySet()
+                )
+                cryptoMarketplaceStore.visitStore(initialResults).collect {
+                    cryptoMarketplaceEmitting.resultsFlow.value = it
+                }
+            } else {
+                cryptoMarketplaceEmitting.resultsFlow.value = CryptoMarketplaceResults(error = listOf(checkingConditionsResults))
             }
         }
         addLifecycleListener {
