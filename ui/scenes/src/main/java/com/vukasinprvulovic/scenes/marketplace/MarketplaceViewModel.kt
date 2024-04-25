@@ -54,9 +54,13 @@ class MarketplaceViewModel @Inject constructor(
                             tradingPair.baseCurrency.properties.name,
                             tradingPair.baseCurrency.properties.icon ?: "",
                             tradingPair.ticker.symbol,
-                            formatToMaxFourDecimals(tradingPair.tradingData.price()),
+                            tradingPair.tradingData.price().let {
+                                if (it == 0f) "" else formatToMaxFourDecimals(it)
+                            },
                             tradingPair.quoteCurrency.properties.symbol,
-                            formatToMaxFourDecimals(dailyChanges.percentageChangedSinceYesterday * 100f),
+                            (dailyChanges.percentageChangedSinceYesterday * 100f).let {
+                                if (it == 0f) "" else formatToMaxFourDecimals(it)
+                            },
                             dailyChanges.percentageChangedSinceYesterday >= 0
                         )
                     } ?: internalMarketplaceState.value.pairs,

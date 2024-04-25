@@ -15,8 +15,8 @@ data class TradingPairModel(
     val priceChange: String,
     val isPriceIncrease: Boolean
 ) {
-    val formattedPrice = "$quoteCurrencySymbol$price"
-    val formattedPriceChange = "${if(isPriceIncrease)"+" else ""}$priceChange%"
+    val formattedPrice = if (price != "") "$quoteCurrencySymbol$price" else "No data"
+    val formattedPriceChange = if (priceChange != "") "${if(isPriceIncrease)"+" else ""}$priceChange%" else ""
 
     val annotatedBaseCurrencyName = buildAnnotatedString {
         if (searchingToken.isNotEmpty()) {

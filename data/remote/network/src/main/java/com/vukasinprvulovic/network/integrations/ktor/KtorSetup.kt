@@ -9,7 +9,9 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.HttpClientEngineConfig
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.client.statement.HttpResponse
@@ -54,6 +56,11 @@ class Ktor @Inject constructor(
 internal val defaultHttpClientConfig = HttpClientConfig<HttpClientEngineConfig>().apply {
     expectSuccess = false
     install(Logging) {
+        logger = object : Logger {
+            override fun log(message: String) {
+                println(message)
+            }
+        }
         level = LogLevel.ALL
     }
     install(ContentNegotiation) {
