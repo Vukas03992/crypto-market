@@ -17,4 +17,6 @@ val cryptoMarketplaceColorScheme = lightColorScheme(
     onBackground = CryptoMarketplacePalette.black,
     surface = CryptoMarketplacePalette.gray,
     onSurface = CryptoMarketplacePalette.black,
+    surfaceVariant = CryptoMarketplacePalette.gray,
+    onSurfaceVariant = CryptoMarketplacePalette.black,
 )
