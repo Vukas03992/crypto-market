@@ -45,8 +45,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.vukasinprvulovic.application.features.cryptomarketplace.refreshing.conditions.CryptoMarketplaceRefreshingConditions
+import com.vukasinprvulovic.application.features.cryptomarketplace.refreshing.conditions.connectivity.NoInternetConnection
 import com.vukasinprvulovic.design.colors.palettes.CryptoMarketplacePalette
 import com.vukasinprvulovic.design.types.poppins
+import com.vukasinprvulovic.elements.components.NoInternetConnectionLabel
 import com.vukasinprvulovic.elements.features.marketplace.currency.MarketplaceCurrencyIcon
 import com.vukasinprvulovic.elements.features.marketplace.error.MarketplaceError
 import com.vukasinprvulovic.elements.features.marketplace.noresults.MarketplaceNoResults
@@ -97,21 +100,31 @@ private fun MarketplaceContent(
         },
     ) { paddingValues ->
 
-        if (viewState.isError) {
-            MarketplaceError()
-        } else if (viewState.noSearchingResults || viewState.noResults) {
-            MarketplaceNoResults()
-        } else {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.padding(top = paddingValues.calculateTopPadding() - 8.dp)
-            ) {
-                items(viewState.pairs.size,
-                    key = { viewState.pairs[it].tradingPairTicker }) { index ->
-                    val tradingPair = viewState.pairs[index]
-                    val paddingTop = if (index == 0) 24.dp else 8.dp
-                    MarketplaceTradingPairItem(tradingPair, modifier = Modifier.padding(top = paddingTop))
+        Box(
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            if (viewState.isError) {
+                MarketplaceError()
+            } else if (viewState.noSearchingResults || viewState.noResults) {
+                MarketplaceNoResults()
+            } else {
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.padding(top = paddingValues.calculateTopPadding() - 8.dp)
+                ) {
+                    items(viewState.pairs.size,
+                        key = { viewState.pairs[it].tradingPairTicker }) { index ->
+                        val tradingPair = viewState.pairs[index]
+                        val paddingTop = if (index == 0) 24.dp else 8.dp
+                        MarketplaceTradingPairItem(tradingPair, modifier = Modifier.padding(top = paddingTop))
+                    }
                 }
+            }
+            if (viewState.noInternetConnection) {
+                NoInternetConnectionLabel(
+                    paddingBottom = paddingValues.calculateBottomPadding(),
+                    modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                )
             }
         }
     }
@@ -254,4 +267,16 @@ private fun MarketplaceTradingPairItem(
 @Composable
 fun MarketplaceAppBarPreview() {
     MarketplaceAppBar(isLoading = false, 0.dp)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MarketplacePreview() {
+    MarketplaceContent(
+        MarketplaceViewState(
+            isLoading = false,
+            pairs = emptyList(),
+            error = listOf(CryptoMarketplaceRefreshingConditions.Results(conditions = listOf(NoInternetConnection)))
+        )
+    )
 }
