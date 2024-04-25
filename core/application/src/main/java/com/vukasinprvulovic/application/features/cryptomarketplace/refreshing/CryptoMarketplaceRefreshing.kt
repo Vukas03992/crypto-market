@@ -1,5 +1,6 @@
 package com.vukasinprvulovic.application.features.cryptomarketplace.refreshing
 
+import androidx.annotation.VisibleForTesting
 import com.vukasinprvulovic.application.features.cryptomarketplace.refreshing.conditions.CryptoMarketplaceRefreshingConditions
 import com.vukasinprvulovic.configuration.di.annotations.ApplicationCoroutineDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,7 +34,11 @@ class CryptoMarketplaceRefresher @Inject constructor(
     private val refreshingJobMutex = Mutex()
     private var currentRefreshingJob: Job? = null
     private val configuration = CryptoMarketplaceRefreshing.Configuration()
-    lateinit var action: suspend (CryptoMarketplaceRefreshingConditions.Results) -> Unit
+    var action: suspend (CryptoMarketplaceRefreshingConditions.Results) -> Unit = { }
+    @VisibleForTesting
+    var internalAction: suspend (CryptoMarketplaceRefreshingConditions.Results) -> Boolean = {
+        action(it); false
+    }
 
     init {
         cryptoMarketplaceRefreshingConditions.subscribeToConditionChanges {
@@ -77,9 +82,10 @@ class CryptoMarketplaceRefresher @Inject constructor(
             val conditionsResults = cryptoMarketplaceRefreshingConditions.areConditionsMet()
             val areConditionsMet = conditionsResults.conditions.isEmpty()
             if (areConditionsMet) {
-                while(true) {
+                var stop = false
+                while(!stop) {
                     ensureActive()
-                    action(cryptoMarketplaceRefreshingConditions.areConditionsMet())
+                    stop = internalAction(cryptoMarketplaceRefreshingConditions.areConditionsMet())
                     delay(configuration.interval)
                 }
             } else {
@@ -96,4 +102,7 @@ class CryptoMarketplaceRefresher @Inject constructor(
     override fun configure(config: CryptoMarketplaceRefreshing.Configuration.() -> Unit) {
         configuration.config()
     }
+
+    @VisibleForTesting
+    fun getCurrentJob() = currentRefreshingJob
 }
