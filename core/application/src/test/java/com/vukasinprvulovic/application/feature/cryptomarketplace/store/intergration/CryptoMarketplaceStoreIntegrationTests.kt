@@ -45,7 +45,7 @@ class CryptoMarketplaceStoreIntegrationTests {
             receivedResultsNumber++
             lastEmittedResult = it
         }
-        receivedResultsNumber shouldBe 1
+        receivedResultsNumber shouldBe 2
         val tradingPairsResults = lastEmittedResult.shouldNotBeNull().data().filterIsInstance<TradingPairs>().shouldNotBeNull().first()
         val tradingPairResults = tradingPairsResults.first()
         tradingPairResults.baseCurrency.shouldBeInstanceOf<CryptoCurrency>()

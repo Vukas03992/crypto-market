@@ -1,6 +1,7 @@
 package com.vukasinprvulovic.network.api.tickers
 
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
+import com.vukasinprvulovic.network.api.tickers.models.TickerRequest
 import com.vukasinprvulovic.network.setup.TestingKtor
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -29,7 +30,7 @@ class TickersAPITests {
             ktor = ktor,
             baseUrl = "https://api-pub.bitfinex.com/v2"
         )
-        val result = ktorTickersAPI.getTickers(TradingPairs(emptyList()))
+        val result = ktorTickersAPI.getTickers(TickerRequest(listOf("tBTCUSD", "tLTCUSD", "tLTCBTC")))
         result.isSuccess shouldBe true
         val tickers = result.getOrNull().shouldNotBeNull().shouldBeInstanceOf<Map<String, Any?>>()
         tickers.size shouldBe 3
