@@ -1,5 +1,6 @@
 package com.vukasinprvulovic.application.features.cryptomarketplace.refreshing
 
+import com.vukasinprvulovic.application.features.cryptomarketplace.refreshing.conditions.CryptoMarketplaceRefreshingConditions
 import com.vukasinprvulovic.configuration.di.annotations.ApplicationCoroutineDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -25,13 +26,20 @@ interface CryptoMarketplaceRefreshing {
 }
 
 class CryptoMarketplaceRefresher @Inject constructor(
-    @ApplicationCoroutineDispatcher private val coroutineDispatcher: CoroutineDispatcher
+    @ApplicationCoroutineDispatcher private val coroutineDispatcher: CoroutineDispatcher,
+    private val cryptoMarketplaceRefreshingConditions: CryptoMarketplaceRefreshingConditions
 ): CryptoMarketplaceRefreshing {
     private val refreshingCoroutineScope = CoroutineScope(SupervisorJob() + coroutineDispatcher)
     private val refreshingJobMutex = Mutex()
     private var currentRefreshingJob: Job? = null
     private val configuration = CryptoMarketplaceRefreshing.Configuration()
-    lateinit var action: suspend () -> Unit
+    lateinit var action: suspend (CryptoMarketplaceRefreshingConditions.Results) -> Unit
+
+    init {
+        cryptoMarketplaceRefreshingConditions.subscribeToConditionChanges {
+            start()
+        }
+    }
 
     fun start() {
         refreshingCoroutineScope.launch {
@@ -66,10 +74,16 @@ class CryptoMarketplaceRefresher @Inject constructor(
     private suspend fun startRefreshing() {
         currentRefreshingJob?.cancel()
         currentRefreshingJob = refreshingCoroutineScope.launch {
-            while(true) {
-                ensureActive()
-                action()
-                delay(configuration.interval)
+            val conditionsResults = cryptoMarketplaceRefreshingConditions.areConditionsMet()
+            val areConditionsMet = conditionsResults.conditions.isEmpty()
+            if (areConditionsMet) {
+                while(true) {
+                    ensureActive()
+                    action(cryptoMarketplaceRefreshingConditions.areConditionsMet())
+                    delay(configuration.interval)
+                }
+            } else {
+                action(conditionsResults)
             }
         }
     }
