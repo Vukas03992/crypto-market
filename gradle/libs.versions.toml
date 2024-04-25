@@ -20,6 +20,7 @@ guava = "32.1.3-android"
 androidx-navigation = "2.7.7"
 androidx-hilt-navigation-compose = "1.2.0"
 lifecycleRuntimeCompose = "2.7.0"
+koil = "2.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 kotest-assertion = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotestVersion" }
 guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+koil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "koil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

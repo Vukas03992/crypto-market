@@ -50,6 +50,7 @@ android {
 
 dependencies {
     implementation(project(":ui:scenes"))
+    implementation(project(":ui:design"))
     implementation(project(":core:application"))
     implementation(project(":data:storage"))
     implementation(project(":data:remote:network"))

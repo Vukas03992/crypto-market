@@ -1,5 +1,6 @@
 package com.vukasinprvulovic.scenes.marketplace
 
+import android.util.Log.e
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vukasinprvulovic.application.entities.trading.data.price.Price
@@ -24,6 +25,7 @@ class MarketplaceViewModel @Inject constructor(
 
     init {
         cryptoMarketplace.subscribe(viewModelScope) {
+            e("TAG", it.toString())
             it.data().findDataOfInstance<TradingPairs>()?.let { tradingPairs ->
                 internalMarketplaceState.value = MarketplaceViewState(
                     tradingPairs.map {
