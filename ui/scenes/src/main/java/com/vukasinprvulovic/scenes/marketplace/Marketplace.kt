@@ -45,13 +45,14 @@ private fun MarketplaceContent(
     LazyColumn(modifier = modifier.fillMaxSize()) {
         items(viewState.pairs.size) { index ->
             val tradingPair = viewState.pairs[index]
-            MarketplaceTradingPairItem()
+            MarketplaceTradingPairItem(tradingPair)
         }
     }
 }
 
 @Composable
 private fun MarketplaceTradingPairItem(
+    tradingPairModel: TradingPairModel,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier
@@ -67,14 +68,19 @@ private fun MarketplaceTradingPairItem(
                 horizontalArrangement = Arrangement.Start,
                 modifier = modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
             ) {
-                MarketplaceCurrencyIcon(currencyName = "Bitcoin", currencyLogoUrl = "https://bitcoin.org/img/icons/opengraph.png")
+                MarketplaceCurrencyIcon(currencyName = tradingPairModel.baseCurrencyName, currencyLogoUrl = tradingPairModel.baseCurrencyLogo)
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
-                    TradingPair()
+                    TradingPair(
+                        baseCurrencyName = tradingPairModel.baseCurrencyName,
+                        tradingPairTicker = tradingPairModel.tradingPairTicker
+                    )
                     TradingPairPrice(
+                        marketPrice = tradingPairModel.formattedPrice,
+                        priceChange = tradingPairModel.formattedPriceChange,
                         modifier = Modifier.fillMaxHeight()
                     )
                 }
@@ -83,15 +89,17 @@ private fun MarketplaceTradingPairItem(
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun MarketplaceContentPreview() {
     MarketplaceContent(
         viewState = MarketplaceViewState(
             listOf(
-                TradingPairModel("BTC/USD", "10000"),
-                TradingPairModel("ETH/USD", "1000")
+                TradingPairModel("","","BTC/USD", "10000"),
+                TradingPairModel("","","ETH/USD", "1000")
             )
         )
     )
 }
+*/

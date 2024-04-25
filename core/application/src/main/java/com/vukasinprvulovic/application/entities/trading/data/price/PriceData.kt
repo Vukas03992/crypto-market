@@ -1,6 +1,9 @@
 package com.vukasinprvulovic.application.entities.trading.data.price
 
+import com.vukasinprvulovic.application.entities.trading.data.Trading
 import com.vukasinprvulovic.application.entities.trading.data.TradingData
+import com.vukasinprvulovic.application.entities.trading.data.price.ask.ASK
+import com.vukasinprvulovic.application.entities.trading.data.price.bid.BID
 
 sealed class Price: TradingData {
 
@@ -30,4 +33,10 @@ sealed class Price: TradingData {
             val amount: Float
         ): DailyMetrics()
     }
+}
+
+fun Trading.Data.price(): Float {
+    val bid = getData<BID>().value
+    val ask = getData<ASK>().value
+    return (bid + ask) / 2
 }

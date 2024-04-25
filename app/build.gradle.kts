@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    implementation(libs.koil.compose)
+
     implementation(libs.hilt)
     kapt(libs.hilt.compiler)
 

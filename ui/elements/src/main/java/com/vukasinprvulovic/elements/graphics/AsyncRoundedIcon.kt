@@ -13,9 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
+import kotlinx.coroutines.Dispatchers
 
 data class AsyncRoundedIconDesign(
     val width: Int,
@@ -40,6 +44,19 @@ fun AsyncRoundedIcon(
     design: AsyncRoundedIconDesign,
     configuration: AsyncRoundedIconConfiguration
 ) {
+
+    val imageRequest = ImageRequest.Builder(LocalContext.current)
+        .data(imageUrl)
+        .dispatcher(Dispatchers.IO)
+        .memoryCacheKey(imageUrl)
+        .diskCacheKey(imageUrl)
+        .placeholder(configuration.placeholder)
+        .error(configuration.error)
+        .fallback(configuration.placeholder)
+        .diskCachePolicy(CachePolicy.ENABLED)
+        .memoryCachePolicy(CachePolicy.ENABLED)
+        .build()
+
     Box(
         modifier = modifier
             .size(design.size.dp)
@@ -48,11 +65,9 @@ fun AsyncRoundedIcon(
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(
-            model = imageUrl,
+            model = imageRequest,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = configuration.placeholder),
-            error = painterResource(id = configuration.error),
             modifier = Modifier.fillMaxSize().padding(design.padding.dp)
         )
     }

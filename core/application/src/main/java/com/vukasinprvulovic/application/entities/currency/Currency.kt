@@ -6,6 +6,7 @@ sealed class Currency<out SpecificProperties: Currency.Properties> {
     interface Properties {
         val identifier: String
         val name: String
+        val icon: String?
         val symbol: String
         val isoCode: String
     }

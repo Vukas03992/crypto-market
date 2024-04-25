@@ -6,23 +6,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.vukasinprvulovic.design.types.poppins
 
 @Composable
 fun TradingPair(
+    baseCurrencyName: String,
+    tradingPairTicker: String,
     modifier: Modifier = Modifier,
-    baseCurrencyName: String = "Bitcoin",
-    tradingPairTicker: String = "BIT/USD",
 ) {
     Column(
         modifier = modifier
     ) {
-        Text(text = baseCurrencyName, style = MaterialTheme.typography.titleLarge)
-        Text(text = tradingPairTicker, style = MaterialTheme.typography.bodyMedium)
+        Text(text = baseCurrencyName, style = MaterialTheme.typography.titleLarge, fontFamily = poppins)
+        Text(text = tradingPairTicker, style = MaterialTheme.typography.bodyMedium, fontFamily = poppins)
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun TradingPairPreview() {
-    TradingPair()
+    TradingPair(
+        "BTC","BTC/USD"
+    )
 }

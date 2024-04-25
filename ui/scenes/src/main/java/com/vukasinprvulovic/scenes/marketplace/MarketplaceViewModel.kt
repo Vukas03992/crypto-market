@@ -4,6 +4,7 @@ import android.util.Log.e
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vukasinprvulovic.application.entities.trading.data.price.Price
+import com.vukasinprvulovic.application.entities.trading.data.price.price
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
 import com.vukasinprvulovic.application.features.cryptomarketplace.CryptoMarketplace
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.findDataOfInstance
@@ -29,9 +30,15 @@ class MarketplaceViewModel @Inject constructor(
             it.data().findDataOfInstance<TradingPairs>()?.let { tradingPairs ->
                 internalMarketplaceState.value = MarketplaceViewState(
                     tradingPairs.map {
+                        val dailyChanges = it.tradingData.getData<Price.Change.Daily>()
                         TradingPairModel(
+                            it.baseCurrency.properties.name,
+                            it.baseCurrency.properties.icon ?: "",
                             it.ticker.symbol,
-                            it.tradingData.getData<Price.LastTrade>().amount.toString()
+                            it.tradingData.price().toString(),
+                            it.quoteCurrency.properties.symbol,
+                            dailyChanges.percentageChangedSinceYesterday.toString(),
+                            dailyChanges.percentageChangedSinceYesterday >= 0
                         )
                     }
                 )
