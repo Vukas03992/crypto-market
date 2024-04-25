@@ -11,7 +11,8 @@ data class MarketplaceViewState(
     val onMarketplaceViewEvent: (MarketplaceViewEvent) -> Unit = {}
 ) {
     val isSearchingInProgress = searchingToken.isNotBlank()
-    val noSearchingResults: Boolean = pairs.isEmpty() && isSearchingInProgress
+    val noResults: Boolean = pairs.isEmpty()
+    val noSearchingResults: Boolean = noResults && isSearchingInProgress
     val isError = error.isNotEmpty()
 }
 

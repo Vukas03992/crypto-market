@@ -99,7 +99,7 @@ private fun MarketplaceContent(
 
         if (viewState.isError) {
             MarketplaceError()
-        } else if (viewState.noSearchingResults) {
+        } else if (viewState.noSearchingResults || viewState.noResults) {
             MarketplaceNoResults()
         } else {
             LazyColumn(
