@@ -41,4 +41,4 @@ internal data class SearchingToken(
 
 data class SearchedTradingPairs(
     val results: TradingPairs
-) : CryptoMarketplaceResults.Data
+) : CryptoMarketplaceResults.FinalData

@@ -20,6 +20,8 @@ data class CryptoMarketplaceResults(
 
     interface Data
 
+    interface FinalData: Data
+
     open class Error(cause: Throwable?): Throwable(cause)
 
     internal suspend fun addData(data: Data) = dataMutex.withLock {

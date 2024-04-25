@@ -18,7 +18,7 @@ data class TradingPair<out BaseCurrency: Currency<*>, out QuoteCurrency: Currenc
 
 data class TradingPairs(
     private val tradingPairs: List<TradingPair<*, *>>
-): List<TradingPair<*, *>> by tradingPairs, CryptoMarketplaceResults.Data {
+): List<TradingPair<*, *>> by tradingPairs, CryptoMarketplaceResults.FinalData {
 
     inline fun <reified QuoteCurrency: Currency<*>> getTradingPairsWithQuoteCurrency(): List<TradingPair<*, QuoteCurrency>> {
         return filterIsInstance<TradingPair<*, QuoteCurrency>>()
