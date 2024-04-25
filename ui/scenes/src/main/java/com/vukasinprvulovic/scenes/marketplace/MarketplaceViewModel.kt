@@ -27,33 +27,31 @@ class MarketplaceViewModel @Inject constructor(
 
     init {
         cryptoMarketplace.subscribe(viewModelScope) {
-           viewModelScope.launch {
-               e("TAG", it.toString())
-               val data = it.data()
-               val isFinalDataReceived = data.findDataOfInstance<CryptoMarketplaceResults.FinalData>()
-               val isLoading = isFinalDataReceived == null
-               val tradingPairs = data.findDataOfInstance<TradingPairs>()
+            e("TAG", it.toString())
+            val data = it.data()
+            val isFinalDataReceived = data.findDataOfInstance<CryptoMarketplaceResults.FinalData>()
+            val isLoading = isFinalDataReceived == null
+            val tradingPairs = data.findDataOfInstance<TradingPairs>()
 
-               if (tradingPairs == null) {
-                   internalMarketplaceState.value = MarketplaceViewState(isLoading = isLoading, pairs = internalMarketplaceState.value.pairs)
-               } else {
-                   internalMarketplaceState.value = MarketplaceViewState(
-                       isLoading = false,
-                       tradingPairs.map {
-                           val dailyChanges = it.tradingData.getData<Price.Change.Daily>()
-                           TradingPairModel(
-                               it.baseCurrency.properties.name,
-                               it.baseCurrency.properties.icon ?: "",
-                               it.ticker.symbol,
-                               it.tradingData.price().toString(),
-                               it.quoteCurrency.properties.symbol,
-                               dailyChanges.percentageChangedSinceYesterday.toString(),
-                               dailyChanges.percentageChangedSinceYesterday >= 0
-                           )
-                       }
-                   )
-               }
-           }
+            if (tradingPairs == null) {
+                internalMarketplaceState.value = MarketplaceViewState(isLoading = isLoading, pairs = internalMarketplaceState.value.pairs)
+            } else {
+                internalMarketplaceState.value = MarketplaceViewState(
+                    isLoading = false,
+                    tradingPairs.map {
+                        val dailyChanges = it.tradingData.getData<Price.Change.Daily>()
+                        TradingPairModel(
+                            it.baseCurrency.properties.name,
+                            it.baseCurrency.properties.icon ?: "",
+                            it.ticker.symbol,
+                            it.tradingData.price().toString(),
+                            it.quoteCurrency.properties.symbol,
+                            dailyChanges.percentageChangedSinceYesterday.toString(),
+                            dailyChanges.percentageChangedSinceYesterday >= 0
+                        )
+                    }
+                )
+            }
         }
         viewModelScope.launch { cryptoMarketplace.resume() }
     }

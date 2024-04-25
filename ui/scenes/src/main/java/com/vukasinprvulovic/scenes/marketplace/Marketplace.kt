@@ -71,7 +71,8 @@ private fun MarketplaceContent(
         },
     ) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            items(viewState.pairs.size) { index ->
+            items(viewState.pairs.size,
+                key = { viewState.pairs[it].tradingPairTicker }) { index ->
                 val tradingPair = viewState.pairs[index]
                 MarketplaceTradingPairItem(tradingPair)
             }
@@ -126,9 +127,11 @@ private fun MarketplaceTradingPairItem(
     tradingPairModel: TradingPairModel,
     modifier: Modifier = Modifier
 ) {
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .padding(vertical = 8.dp, horizontal = 16.dp)) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+    ) {
         Surface(
             shape = MaterialTheme.shapes.large,
             color = CryptoMarketplacePalette.gray,
