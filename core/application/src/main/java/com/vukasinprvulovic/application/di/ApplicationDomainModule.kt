@@ -1,7 +1,7 @@
 package com.vukasinprvulovic.application.di
 
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.di.CryptoMarketplaceStoreBindsModule
-import com.vukasinprvulovic.application.features.cryptomarketplace.store.di.CryptoMarketplaceStoreModule
+import com.vukasinprvulovic.application.features.cryptomarketplace.di.CryptoMarketplaceStoreBindsModule
+import com.vukasinprvulovic.application.features.cryptomarketplace.di.CryptoMarketplaceStoreModule
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent

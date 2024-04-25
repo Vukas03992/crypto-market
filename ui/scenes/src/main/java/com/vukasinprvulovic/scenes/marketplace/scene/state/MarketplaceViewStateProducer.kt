@@ -3,6 +3,7 @@ package com.vukasinprvulovic.scenes.marketplace.scene.state
 import com.vukasinprvulovic.application.entities.trading.data.price.Price
 import com.vukasinprvulovic.application.entities.trading.data.price.price
 import com.vukasinprvulovic.application.entities.trading.pair.TradingPairs
+import com.vukasinprvulovic.application.entities.trading.pair.utils.getDailyPriceChangeSinceYesterday
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.CryptoMarketplaceResults
 import com.vukasinprvulovic.application.features.cryptomarketplace.result.findDataOfInstance
 import com.vukasinprvulovic.application.features.cryptomarketplace.store.components.SearchedTradingPairs
@@ -54,7 +55,7 @@ fun parseTradingPairs(tradingPairs: TradingPairs?, searchToken: String): List<Tr
     }
 
     return tradingPairs?.map { tradingPair ->
-        val dailyChanges = tradingPair.tradingData.getData<Price.Change.Daily>()
+        val dailyChanges = tradingPair.getDailyPriceChangeSinceYesterday()
         val price = tradingPair.tradingData.price()
         val formattedPrice = if (price == 0f) "" else formatToMaxFourDecimals(price)
         val priceChange = dailyChanges.percentageChangedSinceYesterday * 100f

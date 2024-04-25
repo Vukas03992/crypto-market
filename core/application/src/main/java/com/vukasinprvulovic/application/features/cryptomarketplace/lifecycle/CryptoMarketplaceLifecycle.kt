@@ -44,6 +44,11 @@ class CryptoMarketplaceLifecycleManager @Inject constructor(): CryptoMarketplace
                 currentState = CryptoMarketplaceLifecycle.State.STARTED(currentState)
                 listeners.forEach { it(currentState) }
             }
+            if (deferredResumeAction != null) {
+                deferredResumeAction = null
+                currentState = CryptoMarketplaceLifecycle.State.RESUMED(currentState)
+                listeners.forEach { it(currentState) }
+            }
         }
     }
 
