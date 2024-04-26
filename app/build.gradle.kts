@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kapt)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -47,6 +49,13 @@ android {
 }
 
 dependencies {
+    implementation(project(":ui:scenes"))
+    implementation(project(":ui:design"))
+    implementation(project(":core:application"))
+    implementation(project(":data:storage"))
+    implementation(project(":data:remote:network"))
+    implementation(project(":data:remote"))
+    implementation(project(":data:device"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -56,6 +65,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    implementation(libs.koil.compose)
+
+    implementation(libs.hilt)
+    kapt(libs.hilt.compiler)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
