@@ -54,3 +54,11 @@ The project includes unit tests. However, for demonstration purposes, the number
 
 1. Cleaner definition of dependencies in `gradle.kts` files.
 2. Additional time invested in improving UI performance and the organization of UI modules.
+
+## Screenshots
+
+<p>
+  <img src="/assets/no-internet-connection.png" width="224">
+  <img src="/assets/error-state.png" width="224">
+  <img src="/assets/no-results.png" width="224">
+</p>
